@@ -8,12 +8,21 @@ project(tutorial VERSION 1.0)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
-# 使用配置文件。将 config.h.in 拷贝到 config.h，并替换其中的变量。
-# 如果未定义该变量，则为空字符串。
-configure_file(config.h.in config.h)
+# 读取子目录 math。
+add_subdirectory(math)
 
 # 添加一个命为 Tutorial 的二进制，源文件为 tutorial.c。
 add_executable(tutorial tutorial.c)
 
-# 指定查找 include 文件的路径。
+# 链接 library 到我们的 executable。
+target_link_libraries(tutorial PUBLIC mysqrt)
+
+# 添加目录 math。
+target_include_directories(
+    tutorial
+    PUBLIC "${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/math"
+)
+
+# add the binary tree to the search path for include files
+# so that we will find TutorialConfig.h
 target_include_directories(tutorial PUBLIC "${PROJECT_BINARY_DIR}")
